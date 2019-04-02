@@ -18,7 +18,8 @@ Future<List<InfoClass>> getInfoDetail(InfoClass info)async{
   InfoClass infoNull=new InfoClass('404');
   Future<List<InfoClass>> infos=dbHelper.getInfo(info);
   infotemple=await infos;
-  if (infotemple.length==0){
+  if (infotemple==null){
+    print("aád231132asd");
     return [infoNull];
   }
     return infos;
@@ -99,17 +100,16 @@ class _ResultpageState extends State<Resultpage> with SingleTickerProviderStateM
 
             child: FutureBuilder<List<InfoClass>>(
               future: getInfoDetail(this.napInfo),
-
               builder: (context, snapshot) {
                 if (snapshot.data!=null) {
-                    print(snapshot.data);
+
                   if (snapshot.data[0].Vertex != '404') {//Code symbol Null
                     return Container(
                       width: screenSize.width,
                       height: screenSize.height,
                       child:buttonchild(DisplayPage(snapshot,screenSize.width)),
                     );
-                  }else{
+                  }else if(snapshot.data[0].Vertex == '404'){
                     return Column(
                       children: <Widget>[
                         Notfoundicon(),
@@ -117,7 +117,7 @@ class _ResultpageState extends State<Resultpage> with SingleTickerProviderStateM
                             width: screenSize.width,
                             height: screenSize.height / 3,
                             alignment: AlignmentDirectional.center,
-                            child: Text("Rất tiếc không tìn thấy thông tin",
+                            child: Text("Rất tiếc không tìm thấy thông tin",
                                 style: TextStyle(color: Colors.red, fontSize: 20))
                         ),
 
@@ -127,16 +127,12 @@ class _ResultpageState extends State<Resultpage> with SingleTickerProviderStateM
                 } else {
                   return Column(
                     children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0,50,0, 0),
-                        child: Notfoundicon(),
-                      ),
                       Container(
                           width: screenSize.width,
                           height: screenSize.height / 3,
                           alignment: AlignmentDirectional.center,
-                          child: Text("Rất tiếc không tìn thấy thông tin",
-                              style: TextStyle(color: Colors.red, fontSize: 20))
+                          child: Text("Loading...",
+                              style: TextStyle(color: Colors.blue, fontSize: 20))
                       ),
 
                     ],
