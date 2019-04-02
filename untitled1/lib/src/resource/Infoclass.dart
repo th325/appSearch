@@ -9,4 +9,8 @@ class InfoClass{
   var Pass;
   var InfoFee;
   var Code;
+
+  InfoClass(String s){
+    Vertex=s;
+  }
 }

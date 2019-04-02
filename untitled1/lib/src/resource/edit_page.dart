@@ -13,7 +13,7 @@ class AgrumentList{
 
   Future<File> _getLocalFile()async{
     String dir = (await getApplicationDocumentsDirectory()).path;
-    return new File('$dir/fileVertext.txt');
+    return new File('$dir/fileAgru.txt');
   }
   Future<Null>SaveAgru()async{
     String lineArea="",lineVertex="",lineFeature="",lineCountRoom="",lineDirection="";
@@ -29,22 +29,29 @@ class AgrumentList{
       lineDirection+=listDirection[i].value.toString()+',';
      await(await _getLocalFile()).writeAsStringSync(lineVertex+'@'+lineArea+'@'+lineFeature+'@'+lineCountRoom+'@'+lineDirection);
   }
-  Future<List>LoadAgru()async{
-   String liststr=await(await _getLocalFile()).readAsStringSync().toString();
-   print(liststr);
-   listVertex=[];
-   listArea=[];
-   listFeature=[];
-   listCountRoom=[];
-   listDirection=[];
-   LoopTask(liststr.split('@')[0],',', listVertex);
-   LoopTask(liststr.split('@')[1],',', listArea);
-   LoopTask(liststr.split('@')[2],',', listFeature);
-   LoopTask(liststr.split('@')[3],',', listCountRoom);
-   LoopTask(liststr.split('@')[4],',', listDirection);
-   for(int i =0;i<listVertex.length;i++) {
-     print(listVertex[i].value+listVertex.length.toString());
-   }
+  Future<String>LoadAgru()async{
+    try {
+      String liststr = await(await _getLocalFile())
+          .readAsStringSync()
+          .toString();
+      print(liststr);
+      listVertex = [];
+      listArea = [];
+      listFeature = [];
+      listCountRoom = [];
+      listDirection = [];
+      LoopTask(liststr.split('@')[0], ',', listVertex);
+      LoopTask(liststr.split('@')[1], ',', listArea);
+      LoopTask(liststr.split('@')[2], ',', listFeature);
+      LoopTask(liststr.split('@')[3], ',', listCountRoom);
+      LoopTask(liststr.split('@')[4], ',', listDirection);
+      for (int i = 0; i < listVertex.length; i++) {
+        print(listVertex[i].value + listVertex.length.toString());
+      }
+      return "true";
+    }catch(e){
+      return e.toString();
+    }
   }
   void theSame(){
 

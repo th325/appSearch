@@ -4,10 +4,14 @@ import 'package:untitled1/src/logical/readfile.dart';
 class ToolFile{
   String _pathfile="";
   testFile tf= new testFile();
-  void applyfile(String _path){
-    _pathfile=_path;
-    var dbhelper = DBHelper();
-    dbhelper.InsertIntoDB(_pathfile);
-    print("insert success");
+  String er;
+
+  String err;
+  applyfile(String _path) async{
+      _pathfile = _path;
+      var dbhelper = DBHelper();
+      er=await dbhelper.InsertIntoDB(_pathfile);
+      print(er);
+      return er;
   }
 }

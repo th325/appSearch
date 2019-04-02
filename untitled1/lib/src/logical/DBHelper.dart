@@ -41,48 +41,55 @@ class DBHelper{
         'Pass TEXT,'
         'InfoFee TEXT);');
   }
-  void InsertIntoDB(String pathfile)async{
-    var db_conection = await db;
-    final mydata = await rootBundle.loadString(pathfile);
+  Future<String> InsertIntoDB(String pathfile)async{
+    try {
+      var db_conection = await db;
+      final mydata = await rootBundle.loadString(pathfile);
 
-    List<List<dynamic>> listdata = CsvToListConverter().convert(mydata);
-    await db_conection.rawDelete('DELETE  FROM $TABLE_NAME');
-    for (int i=0;i<listdata.length;i++) {
-      InfoClass info = new InfoClass();
-      info.Vertex = listdata[i][0];
-      info.Code = listdata[i][1];
-      info.Area = listdata[i][2];
-      info.Feature = listdata[i][3];
-      info.Price = listdata[i][4];
-      info.Floor = listdata[i][5];
-      info.CountRoom = listdata[i][6];
-      info.Direction = listdata[i][7];
-      info.Pass = listdata[i][8];
-      info.InfoFee = listdata[i][9];
-      agrumentList.initSubclass(agrumentList.listVertex, info.Vertex);
-      agrumentList.initSubclass(agrumentList.listArea, info.Area.toString());
-      agrumentList.initSubclass(agrumentList.listCountRoom, info.CountRoom.toString());
-      agrumentList.initSubclass(agrumentList.listDirection, info.Direction);
-      agrumentList.initSubclass(agrumentList.listFeature, info.Feature);
+      List<List<dynamic>> listdata = CsvToListConverter().convert(mydata);
+      await db_conection.rawDelete('DELETE  FROM $TABLE_NAME');
+      for (int i = 0; i < listdata.length; i++) {
+        InfoClass info = new InfoClass(null);
+        info.Vertex = listdata[i][0];
+        info.Code = listdata[i][1];
+        info.Area = listdata[i][2];
+        info.Feature = listdata[i][3];
+        info.Price = listdata[i][4];
+        info.Floor = listdata[i][5];
+        info.CountRoom = listdata[i][6];
+        info.Direction = listdata[i][7];
+        info.Pass = listdata[i][8];
+        info.InfoFee = listdata[i][9];
+        agrumentList.initSubclass(agrumentList.listVertex, info.Vertex);
+        agrumentList.initSubclass(agrumentList.listArea, info.Area.toString());
+        agrumentList.initSubclass(
+            agrumentList.listCountRoom, info.CountRoom.toString());
+        agrumentList.initSubclass(agrumentList.listDirection, info.Direction);
+        agrumentList.initSubclass(agrumentList.listFeature, info.Feature);
 
-      await db_conection.rawInsert(
-          'INSERT INTO $TABLE_NAME(VerTex,Code,Area,Feature,Price,Floor,CountRoom,Direction,Pass,InfoFee)VALUES(?,?,?,?,?,?,?,?,?,?)',
-          [
-            info.Vertex,
-            info.Code,
-            info.Area,
-            info.Feature,
-            info.Price,
-            info.Floor,
-            info.CountRoom,
-            info.Direction,
-            info.Pass,
-            info.InfoFee,
-          ]);
+        await db_conection.rawInsert(
+            'INSERT INTO $TABLE_NAME(VerTex,Code,Area,Feature,Price,Floor,CountRoom,Direction,Pass,InfoFee)VALUES(?,?,?,?,?,?,?,?,?,?)',
+            [
+              info.Vertex,
+              info.Code,
+              info.Area,
+              info.Feature,
+              info.Price,
+              info.Floor,
+              info.CountRoom,
+              info.Direction,
+              info.Pass,
+              info.InfoFee,
+            ]);
+      }
+      agrumentList.SaveAgru();
+      agrumentList.LoadAgru();
+      return "true";
+    }catch(e){
+      return e.toString();
+
+
     }
-    agrumentList.SaveAgru();
-    agrumentList.LoadAgru();
-
   }
   Future<List<InfoClass>> getInfoAll() async{
     var db_conection = await db;
@@ -91,7 +98,7 @@ class DBHelper{
     List<InfoClass> infos = new List();
 
     for (int i = 0;i<list.length;i++){
-      InfoClass info  = new InfoClass();
+      InfoClass info  = new InfoClass(null);
       info.Vertex = list[i]['VerTex'];
       info.Code=list[i]['Code'];
       info.Price = list[i]['Price'];
@@ -121,7 +128,7 @@ class DBHelper{
     print("start3");
     List<InfoClass> infos = new List();
     for (int i = 0;i<list.length;i++){
-      InfoClass info  = new InfoClass();
+      InfoClass info  = new InfoClass(null);
       info.Vertex = list[i]['VerTex'];
       info.Code = list[i]['Code'];
       info.Price = list[i]['Price'];
@@ -135,7 +142,10 @@ class DBHelper{
       infos.add(info);
     }
 
-    return infos;
+     if (infos.length==0){
+      return null;
+    };
+     return infos;
   }
 }
 /*
